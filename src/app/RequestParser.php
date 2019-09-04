@@ -15,17 +15,36 @@ class RequestParser{
       throw new \RuntimeException('could not find');
     }
 
+    /**
+     * TODO we should track which case is hit the most to decide the order they should be executed?
+     */
     public static function getExternalInternalHosts( $query, $serverArray ) {
-      if( array_key_exists( 'HTTP_HOST', $_SERVER ) && $_SERVER['HTTP_HOST'] ) {
-        $requestHost = $_SERVER['HTTP_HOST'];
-        // TODO could use strpos instead of regex initially?
-        $preg = preg_match( '/(?:.*)PREFIX(?:.*):(?:.*)<(https?:\/\/(' . $requestHost . '))\/(?:entity|prop|reference|value|wiki)\/?(?:.*)>/i', $query, $matches );
-        if( $preg ) {
-          return[ $matches[2], self::getInternalHostFromExternal( $matches[2] ) ];
+      // TODO use strpos first to see if any prefixes actually appear?
+      $prefixSuccess = preg_match_all( '/(?:.*)PREFIX(?:.*):(?:.*)<(https?:\/\/(.+?))\/(?:entity|prop|reference|value|wiki)\/?(?:.*)>/i', $query, $prefixMatch );
+      $prefixDomains = $prefixMatch[2];
+
+      if($prefixSuccess){
+
+        // HTTP_HOST and PREFIX match
+        // Try to figure out the correct taregt by looking at where the request came from
+        // and the headers used in the request..
+        if( array_key_exists( 'HTTP_HOST', $_SERVER ) && $_SERVER['HTTP_HOST'] ) {
+          $requestHost = $_SERVER['HTTP_HOST'];
+          if( ( $key = array_search( $requestHost, $prefixDomains ) ) !== false ) {
+            return[ $prefixDomains[$key], self::getInternalHostFromExternal( $prefixDomains[$key] ) ];
+          }
         }
+
+        // Guess that the first prefix we find will be the right one? D:
+        // XXX: This is evil as prooved by the test it doesnt really work...
+        // TODO look at SERVICES used in the query and eliminate them?
+        // return[ $prefixDomains[0], self::getInternalHostFromExternal( $prefixDomains[0] ) ];
+
       }
 
-      return null;
+
+
+      return [null, null];
 
       // 2 - Figure out the wiki being served
       // - Start with the host header?

@@ -1,4 +1,5 @@
-Description of the test!
+This is the basic structure for writing a test.
+Note the final actual response is null / empty string here as none of the logic ends up working.
 --------
 actualHttpHost
 --------
@@ -8,4 +9,3 @@ QUERY
 --------
 RESPONSE
 --------
-RESPONSE

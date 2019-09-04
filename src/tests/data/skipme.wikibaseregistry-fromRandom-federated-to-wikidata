@@ -1,0 +1,188 @@
+Wikibase registry query federating to wikidata.org
+During the tests both sites exist in the pretend system.
+The prefixes for wikidata.org are first in the query, but not replaced by the gateway.
+This query is from a DIFFERENT host though, so more advanced logic is needed...
+--------
+someOrNoHostname.lalala
+--------
+#defaultView:Timeline
+
+PREFIX wd-wd: <http://www.wikidata.org/entity/>
+PREFIX wd-wdt: <http://www.wikidata.org/prop/direct/>
+
+PREFIX wd: <http://wikibase-registry.wmflabs.org/entity/>
+PREFIX wdt: <http://wikibase-registry.wmflabs.org/prop/direct/>
+
+SELECT ?item ?itemLabel ?date (SAMPLE(?logo) AS ?image)
+WHERE
+{
+  {
+   ?item wdt:P11 wd:Q20 .
+   ?item wdt:P5 ?date .
+   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" }
+   OPTIONAL { ?item wdt:P8 ?logo }
+  }
+ UNION
+  {
+   SERVICE <https://query.wikidata.org/sparql> {
+    ?item wd-wdt:P31 wd-wd:Q37807168 .
+    ?item wd-wdt:P580 ?date .
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" }
+    OPTIONAL { ?item wd-wdt:P154 ?logo }
+   }
+  }
+}
+GROUP BY ?item ?itemLabel ?date
+--------
+#defaultView:Timeline
+
+PREFIX wd-wd: <http://www.wikidata.org/entity/>
+PREFIX wd-wdt: <http://www.wikidata.org/prop/direct/>
+
+PREFIX wd: <http://registryinternal/entity/>
+PREFIX wdt: <http://registryinternal/prop/direct/>
+
+SELECT ?item ?itemLabel ?date (SAMPLE(?logo) AS ?image)
+WHERE
+{
+  {
+   ?item wdt:P11 wd:Q20 .
+   ?item wdt:P5 ?date .
+   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" }
+   OPTIONAL { ?item wdt:P8 ?logo }
+  }
+ UNION
+  {
+   SERVICE <https://query.wikidata.org/sparql> {
+    ?item wd-wdt:P31 wd-wd:Q37807168 .
+    ?item wd-wdt:P580 ?date .
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" }
+    OPTIONAL { ?item wd-wdt:P154 ?logo }
+   }
+  }
+}
+GROUP BY ?item ?itemLabel ?date
+--------
+{
+  "head" : {
+    "vars" : [ "item", "itemLabel", "date", "image" ]
+  },
+  "results" : {
+    "bindings" : [ {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://registryinternal/entity/Q2"
+      },
+      "itemLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Wikidata"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2012-10-26T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/Wikidata-logo-en.svg"
+      }
+    }, {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://registryinternal/entity/Q3"
+      },
+      "itemLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Librarybase"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2015-09-14T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/LibraryBase%20logo.svg"
+      }
+    },
+    {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q37807682"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2017-10-28T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/WikidataCon%202017.svg"
+      }
+    } ]
+  }
+}
+--------
+{
+  "head" : {
+    "vars" : [ "item", "itemLabel", "date", "image" ]
+  },
+  "results" : {
+    "bindings" : [ {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://wikibase-registry.wmflabs.org/entity/Q2"
+      },
+      "itemLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Wikidata"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2012-10-26T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/Wikidata-logo-en.svg"
+      }
+    }, {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://wikibase-registry.wmflabs.org/entity/Q3"
+      },
+      "itemLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Librarybase"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2015-09-14T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/LibraryBase%20logo.svg"
+      }
+    },
+    {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q37807682"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2017-10-28T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/WikidataCon%202017.svg"
+      }
+    } ]
+  }
+}

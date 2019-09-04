@@ -17,7 +17,8 @@ class QueryService{
 
     public static function query($query) {
         if( $query !== self::$expectedQuery ) {
-          return "Expected Query Was Wrong...";
+          return "ASSERT FAIL: Query passed in looks different to what was espected..." .
+            PHP_EOL . self::$nextReponse;
         }
     //   // 5 - Make request to inner / other sparql endpoint
     //   // TODO forward on header

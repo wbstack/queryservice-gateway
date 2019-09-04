@@ -11,6 +11,9 @@ class TheThingsTest extends TestCase
 
       $files = glob(__DIR__ . '/data/*', GLOB_BRACE);
       foreach($files as $file) {
+          if(strpos($file, 'skipme.') !== false) {
+            continue;
+          }
           $content = file_get_contents( $file );
           $parts = explode("--------", $content);
           $parts = array_map('trim', $parts);
