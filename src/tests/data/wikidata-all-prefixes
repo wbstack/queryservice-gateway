@@ -1,6 +1,7 @@
+From https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format#Full_list_of_prefixes
+--------
 www.wikidata.org
 --------
-# From https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format#Full_list_of_prefixes
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#>
@@ -37,7 +38,6 @@ PREFIX wdno: <http://www.wikidata.org/prop/novalue/>
 
 PREFIX hint: <http://www.bigdata.com/queryHints#>
 --------
-# From https://www.mediawiki.org/wiki/Wikibase/Indexing/RDF_Dump_Format#Full_list_of_prefixes
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX ontolex: <http://www.w3.org/ns/lemon/ontolex#>

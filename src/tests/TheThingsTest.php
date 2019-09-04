@@ -14,9 +14,9 @@ class TheThingsTest extends TestCase
           $content = file_get_contents( $file );
           $parts = explode("--------", $content);
           $parts = array_map('trim', $parts);
-          $settings = explode("\n", $parts[0]);
+          $settings = explode("\n", $parts[1]);
           $settings = array_map('trim', $settings);
-          $toReturn[] = [basename($file), $settings, $parts[1], $parts[2], $parts[3], $parts[4]];
+          $toReturn[] = [basename($file), $settings, $parts[2], $parts[3], $parts[4], $parts[5]];
       }
       return $toReturn;
     }

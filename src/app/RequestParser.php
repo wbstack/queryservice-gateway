@@ -7,6 +7,7 @@ class RequestParser{
     private static function getInternalHostFromExternal( $external ) {
       $lookup = [
         'www.wikidata.org' => 'wdinternal',
+        'wikibase-registry.wmflabs.org' => 'registryinternal',
       ];
       if( array_key_exists($external, $lookup) ) {
         return $lookup[$external];
