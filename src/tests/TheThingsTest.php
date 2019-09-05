@@ -36,15 +36,12 @@ class TheThingsTest extends TestCase
     public function testStuff($testName, $settings, $queryIn, $queryOut, $responseIn, $responseOut)
     {
         $_SERVER['HTTP_HOST'] = $settings[0];
-        QueryService::setExpectedQuery($queryOut);
         QueryService::setNextResponse($responseIn);
 
         $response = $this->call('GET', '/sparql?query=' . urlencode( $queryIn ) );
 
-        // if($response->status() !== '200') {
-        //   var_dump($response->getContent());die();
-        // }
         //$this->assertEquals(200, $response->status());
+        $this->assertEquals( $queryOut, QueryService::$lastQuery );
         $this->assertEquals( $responseOut, $response->getContent() );
     }
 }

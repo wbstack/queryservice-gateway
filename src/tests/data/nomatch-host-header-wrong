@@ -39,8 +39,8 @@ GROUP BY ?item ?itemLabel ?date
 PREFIX wd-wd: <http://www.wikidata.org/entity/>
 PREFIX wd-wdt: <http://www.wikidata.org/prop/direct/>
 
-PREFIX wd: <http://registryinternal/entity/>
-PREFIX wdt: <http://registryinternal/prop/direct/>
+PREFIX wd: <http://wikibase-registry.wmflabs.org/entity/>
+PREFIX wdt: <http://wikibase-registry.wmflabs.org/prop/direct/>
 
 SELECT ?item ?itemLabel ?date (SAMPLE(?logo) AS ?image)
 WHERE
@@ -125,3 +125,64 @@ GROUP BY ?item ?itemLabel ?date
   }
 }
 --------
+{
+  "head" : {
+    "vars" : [ "item", "itemLabel", "date", "image" ]
+  },
+  "results" : {
+    "bindings" : [ {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://registryinternal/entity/Q2"
+      },
+      "itemLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Wikidata"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2012-10-26T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/Wikidata-logo-en.svg"
+      }
+    }, {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://registryinternal/entity/Q3"
+      },
+      "itemLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Librarybase"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2015-09-14T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/LibraryBase%20logo.svg"
+      }
+    },
+    {
+      "item" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q37807682"
+      },
+      "date" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#dateTime",
+        "type" : "literal",
+        "value" : "2017-10-28T00:00:00Z"
+      },
+      "image" : {
+        "type" : "uri",
+        "value" : "http://commons.wikimedia.org/wiki/Special:FilePath/WikidataCon%202017.svg"
+      }
+    } ]
+  }
+}

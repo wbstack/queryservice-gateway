@@ -8,7 +8,7 @@ $router->get('/sparql', function ( \Illuminate\Http\Request $request ) use ( $ro
     $query = $request->input('query');
     list( $external, $internal ) = RequestParser::getExternalInternalHosts( $query, $_SERVER );
     if(is_null($external) || is_null($internal)) {
-      return null;
+      response()->json('Could not match request to a backend.', 400);
     }
     $query = Transformer::transformQuery( $query, $internal, $external );
     $data = QueryService::query( $query );

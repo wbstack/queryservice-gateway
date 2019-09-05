@@ -5,20 +5,15 @@ namespace App;
 class QueryService{
 
     private static $nextReponse;
-    private static $expectedQuery;
-
-    public static function setExpectedQuery($expectedQuery) {
-        self::$expectedQuery = $expectedQuery ;
-    }
+    public static $lastQuery;
 
     public static function setNextResponse($response) {
         self::$nextReponse = $response;
     }
 
     public static function query($query) {
-        if( $query !== self::$expectedQuery ) {
-          return "ASSERT FAIL: Query passed in looks different to what was expected...";
-        }
+        self::$lastQuery = $query;
+        return self::$nextReponse;
     //   // 5 - Make request to inner / other sparql endpoint
     //   // TODO forward on header
     //   $ch = curl_init("https://query.wikidata.org/sparql?query=" . urlencode($query));
@@ -27,7 +22,6 @@ class QueryService{
     //   curl_setopt($ch,CURLOPT_USERAGENT,'Addshore OpenCura wdqs-gateway testing');
     //   $data = curl_exec($ch);
     //   curl_close($ch);
-        return self::$nextReponse;
     }
 
 }
