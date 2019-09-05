@@ -2,6 +2,7 @@
 
 use \App\Transformer;
 use \App\QueryService;
+use \App\HostLookup;
 
 class TheThingsTest extends TestCase
 {
@@ -35,6 +36,9 @@ class TheThingsTest extends TestCase
      */
     public function testStuff($testName, $settings, $queryIn, $queryOut, $responseIn, $responseOut)
     {
+        QueryService::setNextQueryIsTestBypass();
+        HostLookup::setNextQueryIsTestBypass();
+
         $_SERVER['HTTP_HOST'] = $settings[0];
         QueryService::setNextResponse($responseIn);
 
