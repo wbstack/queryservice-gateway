@@ -20,7 +20,7 @@ class RequestParser{
      */
     public static function getExternalInternalHosts( $query, $serverArray ) {
       // TODO use strpos first to see if any uris actually appear?
-      $uriSuccess = preg_match_all( '/\<(https?:\/\/([^\>]+))\/(?:entity|prop|reference|value|wiki)(?:[^\<]+)\>/i', $query, $uriMatch );
+      $uriSuccess = preg_match_all( '/\<(https?:\/\/([^\<\>]+))\/(?:entity|prop|reference|value|wiki)(?:[^\<\>]+)\>/i', $query, $uriMatch );
       $uriDomains = $uriMatch[2];
 
       if($uriSuccess){
