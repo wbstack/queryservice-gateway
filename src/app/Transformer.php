@@ -6,8 +6,8 @@ class Transformer{
 
     public static function transformQuery($query, $internal, $external) {
       $query = preg_replace(
-        "/(https?:\/\/)(www\.)?($external)\/(entity|prop|reference|value|wiki)/",
-        'http://$2' . $internal . '/$4',
+        "/(<.*)(https?:\/\/)(www\.)?($external)\/(entity|prop|reference|value|wiki)(.*>)/",
+        '$1http://$3' . $internal . '/$5$6',
         $query
       );
 

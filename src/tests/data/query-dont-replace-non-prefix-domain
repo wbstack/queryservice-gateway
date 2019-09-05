@@ -1,0 +1,18 @@
+Using the domain to be replace in a string.
+I guess approaches here would be to only replace in <> or never replace in ""
+--------
+www.wikidata.org
+--------
+PREFIX bd: <http://www.bigdata.com/rdf#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+# Not valid, but works for the test...
+?WP_pathway wp:organismName "http://www.wikidata.org/wiki/SomePage"^^xsd:string .
+--------
+PREFIX bd: <http://www.bigdata.com/rdf#>
+PREFIX wd: <http://wdinternal/entity/>
+# Not valid, but works for the test...
+?WP_pathway wp:organismName "http://www.wikidata.org/wiki/SomePage"^^xsd:string .
+--------
+Some Response
+--------
+Some Response

@@ -26,6 +26,12 @@ class TheThingsTest extends TestCase
 
     /**
      * @dataProvider provideTestFiles
+     * @param $testName Name of the file for the test being runner
+     * @param $settings [] of settings to be set, right now just HTTP_HOST
+     * @param $queryIn The query provided by the user
+     * @param $queryOut Expected query after modifications
+     * @param $responseIn Mock response from the query service
+     * @param $responseOut Expected query respone after modifications
      */
     public function testStuff($testName, $settings, $queryIn, $queryOut, $responseIn, $responseOut)
     {
