@@ -7,11 +7,13 @@ PREFIX bd: <http://www.bigdata.com/rdf#>
 PREFIX wd: <http://www.wikidata.org/entity/>
 # Not valid, but works for the test...
 ?WP_pathway wp:organismName "http://www.wikidata.org/wiki/SomePage"^^xsd:string .
+FILTER REGEX(STR(?sitelink), "http://www..wikidata.org/wiki/") .
 --------
 PREFIX bd: <http://www.bigdata.com/rdf#>
 PREFIX wd: <http://wdinternal/entity/>
 # Not valid, but works for the test...
 ?WP_pathway wp:organismName "http://www.wikidata.org/wiki/SomePage"^^xsd:string .
+FILTER REGEX(STR(?sitelink), "http://www..wikidata.org/wiki/") .
 --------
 Some Response
 --------
