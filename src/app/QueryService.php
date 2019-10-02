@@ -7,6 +7,7 @@ class QueryService{
     private static $bypassRealQuery = false;
     private static $nextReponse;
     public static $lastQuery;
+    public static $lastHeaders;
     private $sparqlApi = null;
 
     public static function setNextResponse($response) {
@@ -21,10 +22,11 @@ class QueryService{
       self::$sparqlApi = $api;
     }
 
-    public static function query($query) {
+    public static function query($query, $extraCurlHeaders) {
         if(self::$bypassRealQuery) {
           self::$bypassRealQuery = false;
           self::$lastQuery = $query;
+          self::$lastHeaders = $extraCurlHeaders;
           return self::$nextReponse;
         }
 
@@ -38,14 +40,7 @@ class QueryService{
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch,CURLOPT_USERAGENT,'OpenCura(Addshore) wdqs-gateway');
 
-        // Headers that were set in wdqs-proxy before...
-        // TODO maybe we should continue using the proxy? For caching?
-        // but should be caching come before or after this? Probably below?
-        // user -> edge -> cache -> gateway -> proxy? -> blazegraph    ????
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'X-BIGDATA-MAX-QUERY-MILLIS: 60000',// 60000 = 60s
-            'X-BIGDATA-READ-ONLY: yes',
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $extraCurlHeaders);
 
         $data = curl_exec($ch);
         curl_close($ch);

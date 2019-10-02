@@ -4,7 +4,7 @@ use \App\Transformer;
 use \App\QueryService;
 use \App\HostLookup;
 
-class TheThingsTest extends TestCase
+class QueryTransformationTest extends TestCase
 {
 
     public function provideTestFiles(){
