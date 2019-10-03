@@ -8,7 +8,7 @@ class QueryService{
     private static $nextReponse;
     public static $lastQuery;
     public static $lastHeaders;
-    private $sparqlApi = null;
+    private static $sparqlApi = null;
 
     public static function setNextResponse($response) {
         self::$nextReponse = $response;
@@ -18,11 +18,7 @@ class QueryService{
       self::$bypassRealQuery = true;
     }
 
-    public static function setSparqlApi($api) {
-      self::$sparqlApi = $api;
-    }
-
-    public static function query($query, $extraCurlHeaders) {
+    public static function query($sparqlEndpoint, $query, $extraCurlHeaders) {
         if(self::$bypassRealQuery) {
           self::$bypassRealQuery = false;
           self::$lastQuery = $query;
@@ -30,12 +26,8 @@ class QueryService{
           return self::$nextReponse;
         }
 
-        if(!self::$sparqlApi) {
-          throw new \RuntimeException('self::$sparqlApi not yet set');
-        }
-
         // Make request to inner / other sparql endpoint
-        $ch = curl_init( self::$sparqlApi . "?query=" . urlencode($query));
+        $ch = curl_init( $sparqlEndpoint . "?query=" . urlencode($query));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch,CURLOPT_USERAGENT,'OpenCura(Addshore) wdqs-gateway');

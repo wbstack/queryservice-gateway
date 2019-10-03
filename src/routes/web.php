@@ -4,7 +4,9 @@ use \App\Transformer;
 use \App\QueryService;
 use \App\RequestParser;
 
-$router->get('/sparql', function ( \Illuminate\Http\Request $request ) use ( $router ) {
+$singleSparqlEndpoint = getenv('SINGLE_SPARQL_ENDPOINT');
+
+$router->get('/sparql', function ( \Illuminate\Http\Request $request ) use ( $router, $singleSparqlEndpoint ) {
     // Get and transform the query
     $query = $request->input('query');
     list( $external, $internal ) = RequestParser::getExternalInternalHosts( $query, $_SERVER );
@@ -24,7 +26,7 @@ $router->get('/sparql', function ( \Illuminate\Http\Request $request ) use ( $ro
     }
 
     // Make the query
-    $data = QueryService::query( $query, $extraCurlHeaders );
+    $data = QueryService::query( $singleSparqlEndpoint, $query, $extraCurlHeaders );
 
     // Transform the response
     $data = Transformer::transformResponse( $data, $internal, $external );
