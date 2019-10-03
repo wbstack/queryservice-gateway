@@ -1,2 +1,4 @@
-# Avoid sending the code to docker build context for now
-src
+# We only want to ignore these for the docker build
+# I hope they are included in docker-compose...
+/src/vendor
+/src/bootstrap/cache/*
