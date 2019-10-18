@@ -8,7 +8,6 @@ class QueryService{
     private static $nextReponse;
     public static $lastQuery;
     public static $lastHeaders;
-    private static $sparqlApi = null;
 
     public static function setNextResponse($response) {
         self::$nextReponse = $response;
@@ -18,7 +17,7 @@ class QueryService{
       self::$bypassRealQuery = true;
     }
 
-    public static function query($sparqlEndpoint, $query, $extraCurlHeaders) {
+    public static function query($sparqlEndpoint, $query, $extraCurlHeaders, $otherParameters) {
         if(self::$bypassRealQuery) {
           self::$bypassRealQuery = false;
           self::$lastQuery = $query;
@@ -26,18 +25,37 @@ class QueryService{
           return self::$nextReponse;
         }
 
+        $otherParameters['query'] = $query;
+
         // Make request to inner / other sparql endpoint
-        $ch = curl_init( $sparqlEndpoint . "?query=" . urlencode($query));
+        $ch = curl_init( $sparqlEndpoint . '?' . http_build_query( $otherParameters ));
+        $responseHeaders = [];
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch,CURLOPT_USERAGENT,'OpenCura(Addshore) wdqs-gateway');
+        curl_setopt($ch,CURLOPT_USERAGENT,'WbStack(Addshore) wdqs-gateway');
+
+        // https://stackoverflow.com/a/41135574
+        // this function is called by curl for each header received
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+            function($curl, $header) use (&$responseHeaders)
+            {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+
+                $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
+
+                return $len;
+            }
+        );
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $extraCurlHeaders);
 
         $data = curl_exec($ch);
         curl_close($ch);
 
-        return $data;
+        return [$data, $responseHeaders];
     }
 
 }

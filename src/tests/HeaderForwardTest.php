@@ -2,7 +2,7 @@
 
 use \App\Transformer;
 use \App\QueryService;
-use \App\HostLookup;
+use \App\WikiInfoLookup;
 
 class HeaderForwardTest extends TestCase
 {
@@ -16,7 +16,7 @@ class HeaderForwardTest extends TestCase
     public function test_expectedAreCorrectlyForwarded()
     {
         QueryService::setNextQueryIsTestBypass();
-        HostLookup::setNextQueryIsTestBypass();
+        WikiInfoLookup::setNextQueryIsTestBypass();
 
         $expectedHeaders = [
           'X-BIGDATA-MAX-QUERY-MILLIS: 6000',
@@ -36,7 +36,7 @@ class HeaderForwardTest extends TestCase
     public function test_emptyAlsoForwardsEmpty()
     {
         QueryService::setNextQueryIsTestBypass();
-        HostLookup::setNextQueryIsTestBypass();
+        WikiInfoLookup::setNextQueryIsTestBypass();
 
         $expectedHeaders = [];
 
@@ -51,7 +51,7 @@ class HeaderForwardTest extends TestCase
     public function test_extraIsNotForwarded()
     {
         QueryService::setNextQueryIsTestBypass();
-        HostLookup::setNextQueryIsTestBypass();
+        WikiInfoLookup::setNextQueryIsTestBypass();
 
         $expectedHeaders = [
           'X-BIGDATA-MAX-QUERY-MILLIS: 6000',

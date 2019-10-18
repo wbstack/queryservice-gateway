@@ -2,7 +2,7 @@
 
 use \App\Transformer;
 use \App\QueryService;
-use \App\HostLookup;
+use \App\WikiInfoLookup;
 
 class QueryTransformationTest extends TestCase
 {
@@ -37,7 +37,7 @@ class QueryTransformationTest extends TestCase
     public function testStuff($testName, $settings, $queryIn, $queryOut, $responseIn, $responseOut)
     {
         QueryService::setNextQueryIsTestBypass();
-        HostLookup::setNextQueryIsTestBypass();
+        WikiInfoLookup::setNextQueryIsTestBypass();
 
         $_SERVER['HTTP_HOST'] = $settings[0];
         QueryService::setNextResponse($responseIn);
