@@ -3,7 +3,6 @@
 use \App\WikiInfoLookup;
 use \App\QueryService;
 use \App\RequestParser;
-
 $router->get('/sparql', function (\Illuminate\Http\Request $request) use ($router) {
     $allInputs = $request->input();
     if(!array_key_exists( 'query', $allInputs )) {
@@ -42,15 +41,21 @@ $router->get('/sparql', function (\Illuminate\Http\Request $request) use ($route
     }
 
     // Make the query
-    list($data, $responseHeaders) = QueryService::query($queryLocation, $query, $extraCurlHeaders, $allInputs);
+    list($data, $responseHeaders, $httpcode) = QueryService::query(
+        $request->method(),
+        $queryLocation,
+        $query,
+        $extraCurlHeaders,
+        $allInputs
+    );
 
-    // TODO XXX THIS IS REALLY EVIL
+    // TODO XXX THIS IS REALLY EVIL? D:
     // now that we are not query rewriting, we should just use a proxy or something...
     if(!isset($responseHeaders['content-type'])) {
         response()->json('No content type retrieved', 400);
     }
 
     // Return the response
-    return response($data, 200)
-        ->header('Content-Type', $responseHeaders['content-type']);
+    return response($data, $httpcode)
+        ->withHeaders($responseHeaders);
 });

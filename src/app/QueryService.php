@@ -17,7 +17,7 @@ class QueryService{
       self::$bypassRealQuery = true;
     }
 
-    public static function query($sparqlEndpoint, $query, $extraCurlHeaders, $otherParameters) {
+    public static function query($method, $sparqlEndpoint, $query, $extraCurlHeaders, $otherParameters) {
         if(self::$bypassRealQuery) {
           self::$bypassRealQuery = false;
           self::$lastQuery = $query;
@@ -33,6 +33,8 @@ class QueryService{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch,CURLOPT_USERAGENT,'WbStack(Addshore) wdqs-gateway');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $extraCurlHeaders);
 
         // https://stackoverflow.com/a/41135574
         // this function is called by curl for each header received
@@ -50,12 +52,12 @@ class QueryService{
             }
         );
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $extraCurlHeaders);
-
         $data = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         curl_close($ch);
 
-        return [$data, $responseHeaders];
+        return [$data, $responseHeaders, $httpcode];
     }
 
 }
