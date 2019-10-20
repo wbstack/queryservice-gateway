@@ -1,0 +1,16 @@
+{
+  "name": "wikwiki-queryservice-gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "redbird": "^0.9.1",
+    "url-parse": "^1.4.7",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
