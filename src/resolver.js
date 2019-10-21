@@ -2,46 +2,34 @@ var parse = require('url-parse'),
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
 var domainForResolver = function domainForResolver(host, url, req) {
-    //If we detect a header sent from QS-UI then use referer header
-    if (req.headers['x-qsui'] && req.headers.referer) {
-        var parsedReferer = parse(req.headers.referer)
-        // query.domain -> domain
-        if(parsedReferer.host.substr(0,6) === 'query.') {
-            // TODO consider www.?
-            return parsedReferer.host.substr(6)
-        }
-    }
-    // Look for the first wikibase URI that makes sense in the query and determine the wiki domain from that.
-    // TODO consider www.?
-    var parsed = parse('http://' + host + url, true);
-    if (parsed.query.query) {
-        var match = parsed.query.query.match(/\<(https?:\/\/([^\<\>\/]+))(\/(?:entity|prop|reference|value|wiki)(?:[^\<\>]+))\>/ig)
-        if (match) {
-            // Remove < and >
-            for (var i = 0; i < match.length; i++) {
-                match[i] = match[i].substring(1, match[i].length - 1);
-            }
-            // Make array unique
-            match = match.filter((v, i, a) => a.indexOf(v) === i);
 
-            if (match.length === 2) {
-                //TODO log uncertainty?
-            }
-            if (match.length !== 0) {
-                return parse(match[0]).host
-            }
-        }
+    /**
+     * Requests will be made to a location such as:
+     * (www.)?mywiki.com/query/sparql
+     * And the host header will be set to reflect that.
+     *
+     * Example docker development local headers: { host: 'localhost:8085' }
+     */
+
+    var hostHeader = null
+    if(req.headers["x-forwarded-host"]){
+        hostHeader = req.headers["x-forwarded-host"]
+    }else if (req.headers.host) {
+        hostHeader = req.headers.host
     }
 
-    // DEV: docker-compose localhost hacking :)
-    if (req.headers.origin && req.headers.origin == "http://localhost:8084") {
-        return "localhost"
-    }
-    if (req.headers.referer && req.headers.referer == "http://localhost:8084") {
-        return "localhost"
+    if(!hostHeader) {
+        return null
     }
 
-    return null
+    var parsedHostHeader = parse("http://"+hostHeader)
+    // Remove www. (if present)
+    if(parsedHostHeader.host.substr(0,4) === 'www.') {
+        return parsedHostHeader.host.substr(4)
+    }
+
+    return parsedHostHeader.host
+
 }
 
 var defaultResolver = function resolver(host, url, req) {
@@ -61,10 +49,13 @@ var defaultResolver = function resolver(host, url, req) {
         xmlHttp.send(null);
         var response = JSON.parse(xmlHttp.responseText);
 
-        // TODO make sure response looks good?
+        if(!response.data) {
+            return null
+        }
 
         let backend = response.data.wiki_queryservice_namespace.backend;
         let namespace = response.data.wiki_queryservice_namespace.namespace;
+        var parsed = parse('http://' + host + url, true);
         parsed.set('pathname', '/bigdata/namespace/' + namespace)
         parsed.set('hostname', backend)
         // unset the port as it is set in the backend host...
