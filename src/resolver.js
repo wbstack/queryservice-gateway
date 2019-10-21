@@ -2,15 +2,18 @@ var parse = require('url-parse'),
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
 var domainForResolver = function domainForResolver(host, url, req) {
-    var wikiDomain = '';
-
-    // TODO QSUI should send custom header when it knows what the wiki domain is? :)
-
-    //// 1) Get suspected wiki URI from the query URIs
-
-    // parse the url
+    //If we detect a header sent from QS-UI then use referer header
+    if (req.headers['x-qsui'] && req.headers.referer) {
+        var parsedReferer = parse(req.headers.referer)
+        // query.domain -> domain
+        if(parsedReferer.host.substr(0,6) === 'query.') {
+            // TODO consider www.?
+            return parsedReferer.host.substr(6)
+        }
+    }
+    // Look for the first wikibase URI that makes sense in the query and determine the wiki domain from that.
+    // TODO consider www.?
     var parsed = parse('http://' + host + url, true);
-
     if (parsed.query.query) {
         var match = parsed.query.query.match(/\<(https?:\/\/([^\<\>\/]+))(\/(?:entity|prop|reference|value|wiki)(?:[^\<\>]+))\>/ig)
         if (match) {
@@ -30,8 +33,7 @@ var domainForResolver = function domainForResolver(host, url, req) {
         }
     }
 
-    //// 2) Get from origin or referer headers if possible (LOCALHOST only currently)
-    // Localhost and the port come from the development docker-compose setup, and make things work locally
+    // DEV: docker-compose localhost hacking :)
     if (req.headers.origin && req.headers.origin == "http://localhost:8084") {
         return "localhost"
     }
@@ -52,8 +54,6 @@ var defaultResolver = function resolver(host, url, req) {
             return null
         }
 
-        //// 2) Make request to API using suspected wiki URI
-
         // TODO should this be async?! What promise should i be returning...
         // TODO api should be in ENV VAR....
         var xmlHttp = new XMLHttpRequest();
@@ -61,9 +61,7 @@ var defaultResolver = function resolver(host, url, req) {
         xmlHttp.send(null);
         var response = JSON.parse(xmlHttp.responseText);
 
-        //TODO make sure response looks good?
-
-        //// 3) Setup proxying..
+        // TODO make sure response looks good?
 
         let backend = response.data.wiki_queryservice_namespace.backend;
         let namespace = response.data.wiki_queryservice_namespace.namespace;

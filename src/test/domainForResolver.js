@@ -8,33 +8,33 @@ describe('resolver', function() {
             null
         );
     });
-    it('First URI in query is matched', function() {
+    it('First Wikibase URI in query is matched 1', function() {
         assert.equal(
-            r.domainForResolver('somedomain.wiki', '/sparql?query=<http://somedomain.wiki/entity/>', {headers:{}}),
+            r.domainForResolver('XXX', '/sparql?query=<http://something><http://somedomain.wiki/entity/>', {headers:{}}),
             "somedomain.wiki"
         );
     });
-    it('URI ignored if not for wikibase 1', function() {
+    it('First Wikibase URI in query is matched 1', function() {
         assert.equal(
-            r.domainForResolver('somedomain.wiki', '/sparql?query=<http://something><http://somedomain.wiki/entity/>', {headers:{}}),
+            r.domainForResolver('XXX', '/sparql?query=<http://something/><http://somedomain.wiki/entity/>', {headers:{}}),
             "somedomain.wiki"
         );
     });
-    it('URI ignored if not for wikibase 2', function() {
+    it('Referer used when x-qsui header passed, Wikibase URI in query ignored', function() {
         assert.equal(
-            r.domainForResolver('somedomain.wiki', '/sparql?query=<http://something/><http://somedomain.wiki/entity/>', {headers:{}}),
-            "somedomain.wiki"
+            r.domainForResolver('XXX', '/sparql?query=<http://someOtherHeader/entity/>', {headers:{"x-qsui": 1, referer: "http://query.mydomain"}}),
+            "mydomain"
         );
     });
     it('localhost, origin header is used, when no query URI match', function() {
         assert.equal(
-            r.domainForResolver('somedomain.wiki', '/sparql?query=someQuery', {headers:{origin:"http://localhost:8084"}}),
+            r.domainForResolver('XXX', '/sparql?query=someQuery', {headers:{origin:"http://localhost:8084"}}),
             "localhost"
         );
     });
     it('localhost, referer header is used, when no query URI match', function() {
         assert.equal(
-            r.domainForResolver('somedomain.wiki', '/sparql?query=someQuery', {headers:{referer:"http://localhost:8084"}}),
+            r.domainForResolver('XXX', '/sparql?query=someQuery', {headers:{referer:"http://localhost:8084"}}),
             "localhost"
         );
     });
