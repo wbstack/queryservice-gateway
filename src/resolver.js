@@ -43,9 +43,8 @@ var defaultResolver = function resolver(host, url, req) {
         }
 
         // TODO should this be async?! What promise should i be returning...
-        // TODO api should be in ENV VAR....
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", "http://api:80/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain), false); // false for synchronous request
+        xmlHttp.open("GET", "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain), false); // false for synchronous request
         xmlHttp.send(null);
         var response = JSON.parse(xmlHttp.responseText);
 
