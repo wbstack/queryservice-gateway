@@ -44,7 +44,12 @@ var defaultResolver = function resolver(host, url, req) {
 
         // TODO should this be async?! What promise should i be returning...
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain), false); // false for synchronous request
+        xmlHttp.open(
+            "GET",
+            "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain),
+            false // false for synchronous request
+        );
+        xmlHttp.setRequestHeader("User-Agent", "WBStack - Query Service - Gateway");
         xmlHttp.send(null);
         var response = JSON.parse(xmlHttp.responseText);
 
