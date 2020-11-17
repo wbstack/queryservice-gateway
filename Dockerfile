@@ -2,7 +2,7 @@ FROM node:12
 
 WORKDIR /redbird
 
-COPY ./src .
+COPY ./ .
 RUN npm install
 
 EXPOSE 80
