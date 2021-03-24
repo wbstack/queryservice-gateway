@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "redbird": "^0.9.1",
-    "url-parse": "^1.4.7",
+    "url-parse": "^1.5.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
