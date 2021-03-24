@@ -1,7 +1,7 @@
 var parse = require('url-parse'),
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-var domainForResolver = function domainForResolver(host, url, req) {
+var domainForResolver = function domainForResolver(req) {
 
     /**
      * Requests will be made to a location such as:
@@ -37,7 +37,7 @@ var defaultResolver = function resolver(host, url, req) {
     // Try and log on failures (so this process keeps running...)
     try {
 
-        var wikiDomain = domainForResolver(host,url,req)
+        var wikiDomain = domainForResolver(req)
         if(wikiDomain === null) {
             return null
         }
