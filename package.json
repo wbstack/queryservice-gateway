@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "redbird": "^0.9.1",
+    "redbird": "^0.10.0",
     "url-parse": "^1.5.1",
     "xmlhttprequest": "^1.8.0"
   },
