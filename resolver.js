@@ -1,5 +1,6 @@
 var parse = require('url-parse'),
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
+    TTLCache = require('@isaacs/ttlcache')
 
 var domainForResolver = function domainForResolver(req) {
 
@@ -33,32 +34,12 @@ var domainForResolver = function domainForResolver(req) {
 }
 
 var defaultResolver = function resolver(host, url, req) {
-    return new Promise(function (resolve, reject) {
-        var wikiDomain = domainForResolver(req)
-        if (wikiDomain === null) {
-            resolve(null)
-            return
-        }
+    var wikiDomain = domainForResolver(req)
+    if (wikiDomain === null) {
+        return Promise.resolve(null)
+    }
 
-        var xmlHttp = new XMLHttpRequest()
-        xmlHttp.open(
-            "GET",
-            "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain)
-        );
-        xmlHttp.setRequestHeader("User-Agent", "WBStack - Query Service - Gateway");
-        xmlHttp.send(null);
-        xmlHttp.onreadystatechange = function() {
-            if (this.readyState === 4) {
-                if (this.status === 200) {
-                    resolve(JSON.parse(xmlHttp.responseText))
-                    return
-                }
-                reject(
-                    new Error(`Unexpected status code ${this.status} with error: ${xmlHttp.responseText}`)
-                )
-            }
-        };
-    })
+    return fetchWikiForDomain(wikiDomain)
         .then(function (response) {
             if (!response || !response.data) {
                 return null
@@ -79,6 +60,42 @@ var defaultResolver = function resolver(host, url, req) {
             throw err
         })
 
+}
+
+var responseCache = new TTLCache({
+    ttl: parseInt(process.env.RESPONSE_CACHE_TTL || 60 * 60, 10) * 1000
+})
+
+function fetchWikiForDomain (wikiDomain) {
+    var cachedResponse = responseCache.get(wikiDomain)
+    if (cachedResponse) {
+        return cachedResponse
+    }
+
+    return new Promise(function (resolve, reject) {
+        var xmlHttp = new XMLHttpRequest()
+        xmlHttp.open(
+            "GET",
+            "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain)
+        );
+        xmlHttp.setRequestHeader("User-Agent", "WBStack - Query Service - Gateway");
+        xmlHttp.send(null);
+        xmlHttp.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    resolve(JSON.parse(xmlHttp.responseText))
+                    return
+                }
+                reject(
+                    new Error(`Unexpected status code ${this.status} with error: ${xmlHttp.responseText}`)
+                )
+            }
+        };
+    })
+        .then(function (response) {
+            responseCache.set(wikiDomain, response)
+            return response
+        })
 }
 
 module.exports = {
