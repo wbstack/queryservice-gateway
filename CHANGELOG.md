@@ -1,5 +1,9 @@
 # queryservice-gateway
 
+## June 2023
+
+- 2.2 - Use asynchronous requests when fetching data from Platform API
+
 ## November 2020
 
 - 2.1 - From Github actions build
