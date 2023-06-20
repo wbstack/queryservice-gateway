@@ -83,7 +83,11 @@ function fetchWikiForDomain (wikiDomain) {
         xmlHttp.onreadystatechange = function() {
             if (this.readyState === 4) {
                 if (this.status === 200) {
-                    resolve(JSON.parse(xmlHttp.responseText))
+                    try {
+                        resolve(JSON.parse(xmlHttp.responseText))
+                    } catch (err) {
+                        reject(err)
+                    }
                     return
                 }
                 reject(
