@@ -33,44 +33,51 @@ var domainForResolver = function domainForResolver(req) {
 }
 
 var defaultResolver = function resolver(host, url, req) {
-
-    // Try and log on failures (so this process keeps running...)
-    try {
-
+    return new Promise(function (resolve, reject) {
         var wikiDomain = domainForResolver(req)
-        if(wikiDomain === null) {
-            return null
+        if (wikiDomain === null) {
+            resolve(null)
+            return
         }
 
-        // TODO should this be async?! What promise should i be returning...
-        var xmlHttp = new XMLHttpRequest();
+        var xmlHttp = new XMLHttpRequest()
         xmlHttp.open(
             "GET",
-            "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain),
-            false // false for synchronous request
+            "http://"+process.env["PLATFORM_API_BACKEND_HOST"]+"/backend/wiki/getWikiForDomain?domain=" + encodeURI(wikiDomain)
         );
         xmlHttp.setRequestHeader("User-Agent", "WBStack - Query Service - Gateway");
         xmlHttp.send(null);
-        var response = JSON.parse(xmlHttp.responseText);
+        xmlHttp.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
+                    resolve(JSON.parse(xmlHttp.responseText))
+                    return
+                }
+                reject(
+                    new Error(`Unexpected status code ${this.status} with error: ${xmlHttp.responseText}`)
+                )
+            }
+        };
+    })
+        .then(function (response) {
+            if (!response || !response.data) {
+                return null
+            }
 
-        if(!response.data) {
-            return null
-        }
+            let backend = response.data.wiki_queryservice_namespace.backend
+            let namespace = response.data.wiki_queryservice_namespace.namespace
+            var parsed = parse('http://' + host + url, true)
+            parsed.set('pathname', '/bigdata/namespace/' + namespace)
+            parsed.set('hostname', backend)
+            // unset the port as it is set in the backend host...
+            parsed.set('port', '')
 
-        let backend = response.data.wiki_queryservice_namespace.backend;
-        let namespace = response.data.wiki_queryservice_namespace.namespace;
-        var parsed = parse('http://' + host + url, true);
-        parsed.set('pathname', '/bigdata/namespace/' + namespace)
-        parsed.set('hostname', backend)
-        // unset the port as it is set in the backend host...
-        parsed.set('port', '')
-
-        return parsed.toString()
-
-    }
-    catch (error) {
-        console.error(error);
-    }
+            return parsed.toString()
+        })
+        .catch(function (err) {
+            console.error(err)
+            throw err
+        })
 
 }
 
