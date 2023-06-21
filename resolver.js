@@ -69,7 +69,7 @@ var responseCache = new TTLCache({
 function fetchWikiForDomain (wikiDomain) {
     var cachedResponse = responseCache.get(wikiDomain)
     if (cachedResponse) {
-        return cachedResponse
+        return Promise.resolve(cachedResponse)
     }
 
     return new Promise(function (resolve, reject) {
