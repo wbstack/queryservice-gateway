@@ -1,4 +1,4 @@
-FROM node:15
+FROM node:19
 
 LABEL org.opencontainers.image.source="https://github.com/wbstack/queryservice-gateway"
 
