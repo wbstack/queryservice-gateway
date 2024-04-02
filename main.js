@@ -7,5 +7,6 @@ var r = require("./resolver.js")
 
 var proxy = new require('redbird')({
         port: port,
-        resolvers: [r.defaultResolver]
+        resolvers: [r.defaultResolver],
+        proxyTimeout: parseInt(process.env.PROXY_TIMEOUT || 5 * 60, 10) * 1000
     })
