@@ -14,6 +14,7 @@
       - Bump docker/setup-buildx-action from 1.6.0 to 4.3.0
       - Bump crazy-max/ghaction-docker-meta from 3.7.0 to 6.2.0
       - Pin python version 3.10 for nodejs workflow
+      - Add a non-blocking CI test for future node versions
 
 ## June 2023
 
