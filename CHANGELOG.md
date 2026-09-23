@@ -2,7 +2,7 @@
 
 ## September 2026
 
-- 2.3 - Bump actions/github-script from 6 to 9
+- 2.4 - Bump actions/github-script from 6 to 9
       - Bump docker/login-action from 1.14.1 to 4.6.0
       - Bump crazy-max/ghaction-docker-meta from 3.7.0 to 6.2.0
       - Bump docker/build-push-action from 2.10.0 to 7.3.0
@@ -15,6 +15,10 @@
       - Bump crazy-max/ghaction-docker-meta from 3.7.0 to 6.2.0
       - Pin python version 3.10 for nodejs workflow
       - Add a non-blocking CI test for future node versions
+
+## April 2024
+
+- 2.3 - feat: allow proxyTimeout to be configured
 
 ## June 2023
 
