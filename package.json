@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@isaacs/ttlcache": "^1.4.0",
-    "redbird": "^0.9.1",
+    "redbird": "^1.0.2",
     "url-parse": "^1.5.1",
     "xmlhttprequest": "^1.8.0"
   },
