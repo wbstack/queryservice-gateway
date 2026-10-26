@@ -1,5 +1,8 @@
 # queryservice-gateway
 
+## October 2026
+- 2.5 - Update to Node 24
+
 ## September 2026
 
 - 2.4 - Bump actions/github-script from 6 to 9
