@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 24.x ]
+        node-version: [ 24.x, 26.x ]
 
     steps:
     - uses: actions/checkout@v7
@@ -26,20 +26,3 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run test
-      
-  future-node-version-test:
-    continue-on-error: true # Should be removed once we have updated our node version.
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [ 25.x ]
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7.0.0
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run test
