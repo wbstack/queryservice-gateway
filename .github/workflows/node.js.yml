@@ -16,8 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 15.x ]
-        python-version: [ '3.10' ]
+        node-version: [ 15.x, 26.x ]
 
     steps:
     - uses: actions/checkout@v7
@@ -27,8 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Use python ${{ matrix.python-version }}
       uses: actions/setup-python@v7
-      with:
-        python-version: ${{ matrix.python-version }}
     - run: npm ci
     - run: npm run test
       
