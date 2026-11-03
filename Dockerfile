@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.source="https://github.com/wbstack/queryservice-g
 WORKDIR /redbird
 
 COPY ./ .
-RUN npm install
+RUN npm ci
 
 EXPOSE 80
 CMD ["node", "main.js"]
