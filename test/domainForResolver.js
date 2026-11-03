@@ -26,6 +26,27 @@ describe('resolver.domainForResolver', function() {
             "somexhost"
         );
     });
+    it('host port removed for API domain lookup', function() {
+        assert.strictEqual(
+            r.domainForResolver({headers:{'host': 'realwiki.localhost:8001'}}),
+            "realwiki.localhost"
+        );
+    });
+    it('host www and port removed', function() {
+        assert.strictEqual(
+            r.domainForResolver({headers:{'host': 'www.realwiki.localhost:8001'}}),
+            "realwiki.localhost"
+        );
+    });
+    it('forwarded host port removed and takes precedence', function() {
+        assert.strictEqual(
+            r.domainForResolver({headers:{
+                'host': 'query-gateway',
+                'x-forwarded-host': 'www.realwiki.localhost:8001'
+            }}),
+            "realwiki.localhost"
+        );
+    });
     it('x-forwarded-host', function() {
         assert.strictEqual(
             r.domainForResolver({headers:{'x-forwarded-host': 'somexhost'}}),

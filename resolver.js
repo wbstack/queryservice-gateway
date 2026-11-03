@@ -24,12 +24,13 @@ var domainForResolver = function domainForResolver(req) {
     }
 
     var parsedHostHeader = parse("http://"+hostHeader)
+    // API domains do not include the public HTTP port.
     // Remove www. (if present)
-    if(parsedHostHeader.host.substr(0,4) === 'www.') {
-        return parsedHostHeader.host.substr(4)
+    if(parsedHostHeader.hostname.substr(0,4) === 'www.') {
+        return parsedHostHeader.hostname.substr(4)
     }
 
-    return parsedHostHeader.host
+    return parsedHostHeader.hostname
 
 }
 
